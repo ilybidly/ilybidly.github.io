@@ -1,4 +1,177 @@
-집 갈거얍
-보내줘!!!!!!!!!
-아냡................
-어디로든 문이 필요해.......ㅠㅠ
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>30초 반응속도 게임</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    #info {
+      font-size: 20px;
+      margin: 20px;
+    }
+
+    #game {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      height: 500px;
+      margin: auto;
+      background: white;
+      border: 3px solid #222;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    #target {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: tomato;
+      cursor: pointer;
+      display: none;
+    }
+
+    button {
+      margin: 15px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #222;
+      color: white;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    #message {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>30초 반응속도 게임</h1>
+
+  <div id="info">
+    점수: <span id="score">0</span>
+    &nbsp; | &nbsp;
+    남은 시간: <span id="time">30</span>초
+  </div>
+
+  <button id="startButton">게임 시작</button>
+
+  <div id="message">
+    시작 버튼을 눌러주세요!
+  </div>
+
+  <div id="game">
+    <div id="target"></div>
+  </div>
+
+  <script>
+    // 필요한 HTML 요소 가져오기
+    const game = document.getElementById("game");
+    const target = document.getElementById("target");
+    const scoreText = document.getElementById("score");
+    const timeText = document.getElementById("time");
+    const startButton = document.getElementById("startButton");
+    const message = document.getElementById("message");
+
+    // 게임에 필요한 변수
+    let score = 0;
+    let time = 30;
+    let gameRunning = false;
+    let timer;
+
+    // 랜덤한 위치에 원을 배치하는 함수
+    function moveTarget() {
+      const maxX = game.clientWidth - target.clientWidth;
+      const maxY = game.clientHeight - target.clientHeight;
+
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+
+      target.style.left = randomX + "px";
+      target.style.top = randomY + "px";
+    }
+
+    // 게임 시작
+    function startGame() {
+      score = 0;
+      time = 30;
+      gameRunning = true;
+
+      scoreText.textContent = score;
+      timeText.textContent = time;
+
+      message.textContent = "빨간 원을 최대한 많이 클릭하세요!";
+      target.style.display = "block";
+
+      moveTarget();
+
+      // 기존 타이머가 있다면 제거
+      clearInterval(timer);
+
+      // 1초마다 시간 감소
+      timer = setInterval(() => {
+        time--;
+
+        timeText.textContent = time;
+
+        if (time <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    // 원 클릭
+    target.addEventListener("click", () => {
+      if (!gameRunning) return;
+
+      score++;
+      scoreText.textContent = score;
+
+      moveTarget();
+    });
+
+    // 게임 종료
+    function endGame() {
+      gameRunning = false;
+
+      clearInterval(timer);
+
+      target.style.display = "none";
+
+      message.textContent =
+        "게임 종료! 최종 점수는 " + score + "점입니다.";
+    }
+
+    // 시작 버튼
+    startButton.addEventListener("click", startGame);
+  </script>
+
+</body>
+</html>
